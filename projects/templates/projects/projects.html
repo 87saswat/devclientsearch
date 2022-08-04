@@ -66,10 +66,14 @@
                 </div>
             </div>
         </section>
-    
+
+
+ 
+       {% include 'pagination.html' with queryset=projects custom_range=custom_range %}  
+                        <!-- with queryset = projects means we are passing a props(value to child) which is key value pair -->
        
     </main>
     
 </body>
 </html>
-{% endblock %}
+{% endblock %} 

@@ -1,3 +1,4 @@
+from turtle import left
 from django.core import paginator
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -5,23 +6,15 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Projects, Tag
 from .forms import ProjectForm
-from .utils import searchProjects
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from .utils import searchProjects, paginateProjects
 
 
 def projects(request):
     projects, search_query = searchProjects(request)
-
-    # implementing paginator------------------------------------------------------>
-    # custom_range, projects = paginateProjects(request, projects, 6)
-    page = 1  # page number e.g. page-1 or page-2 etc
-    results = 3  # 3 results per page
-    paginator = Paginator(projects, results)
-    projects = paginator.page(page)
-    # <-------------------------------------------------------- Paginator ends
+    custom_range, projects = paginateProjects(request, projects, 6)
 
     context = {'projects': projects,
-               'search_query': search_query, }
+               'search_query': search_query, 'paginator': paginator, 'custom_range': custom_range}
     return render(request, 'projects/projects.html', context)
 
 

@@ -57,12 +57,14 @@
                 </div>
                 {% endfor %}
                 
+
                
                 
             </div>
         </div>
     </section>
 
-   
+{% include 'pagination.html' with queryset=profiles custom_range=custom_range %}
+<!-- with queryset = projects or queryset = profiles means we are passing a props(value to child) which is key value pair -->
 </main>
 {% endblock %}
