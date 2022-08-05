@@ -4,24 +4,25 @@
 
         <!-- previous and next button functionality -->
         {% if queryset.has_previous %}
-        <li><a href="?page={{queryset.previous_page_number}}" class="btn page-link">&#10094; Prev</a></li>
+                                                                <!--data-page = {{value}} is the custom value e are passing to the html to gran this in future in pur JS -->
+        <li><a href="?page={{queryset.previous_page_number}}" class="btn page-link" data-page="{{queryset.previous_page_number}}">&#10094; Prev</a></li>
         {% endif %}
 
 
 
         {% for page in custom_range %}
         {% if page == queryset.number %}
-        <li><a href="?page={{page}}" class="btn page-link btn--sub">{{page}}</a></li>
+        <li><a href="?page={{page}}" class="btn page-link btn--sub" data-page="{{page}}">{{page}}</a></li>
         <!-- to highlight current page button -->
         {% else %}
-        <li><a href="?page={{page}}" class="btn page-link">{{page}}</a></li>
+        <li><a href="?page={{page}}" class="btn page-link"  data-page="{{page}}">{{page}}</a></li>
         <!-- it gives us a range of button from page-1 till last page e.g. (1-3) -->
         {% endif %}
         {% endfor %}
 
 
         {% if queryset.has_next %}
-        <li><a href="?page={{queryset.next_page_number}}" class="btn page-link">&#10095; Next</a></li>
+        <li><a href="?page={{queryset.next_page_number}}" class="btn page-link" data-page="{{queryset.next_page_number}}">&#10095; Next</a></li>
         {% endif %}
 
     </ul>
