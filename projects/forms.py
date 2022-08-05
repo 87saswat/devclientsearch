@@ -1,8 +1,7 @@
-from dataclasses import field, fields
-import imp
-from pyexpat import model
+
+
 from django.forms import ModelForm
-from .models import Projects
+from .models import Projects, Review
 from django import forms
 
 
@@ -44,3 +43,23 @@ class ProjectForm(ModelForm):
         # ----------------------------------------------------
         # for name, field in self.fields.items():
         #     field.widget.attrs.update({'class': 'input'})
+
+
+class ReviewForm(ModelForm):
+    class Meta:
+        model = Review
+        fields = ['value', 'body']
+
+        labels = {
+            'value': 'Place your vote',
+            'body': 'Add a comment to your vote'
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ReviewForm, self).__init__(*args, **kwargs)
+        self.fields['body'].widget.attrs.update(
+            {'class': 'input'}
+        )
+        self.fields['value'].widget.attrs.update(
+            {'class': 'input'}
+        )
