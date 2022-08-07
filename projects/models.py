@@ -1,5 +1,6 @@
 
 
+from multiprocessing.sharedctypes import Value
 from pyexpat import model
 from django.db import models
 import uuid
@@ -29,7 +30,27 @@ class Projects(models.Model):
         return self.title
 
     class Meta:
-        ordering = ['-created']
+        ordering = ['-vote_ratio', '-vote_total', 'title']
+
+    @property
+    def reviewers(self):
+        # getting all the reviewers and their id through owner__id (owner-->Profile-->id), value_list..flat=true(will convert it to a True list) means it is a list of values instead of object
+        queryset = self.review_set.all().value_list(
+            'owner__id', flat=True)  # it gives us the id of all the reviewer
+        return queryset
+
+    @property
+    def getVotecount(self):
+        reviews = self.review_set.all()
+        up_vote = reviews.filter(value='up').count()
+        # down_vote = reviews.filter(value='down').count()
+        total_vote = reviews.count()
+        ratio = (up_vote/total_vote) * 100
+
+        self.vote_total = total_vote  # update the vote_total and vote_ration
+        self.vote_ratio = ratio
+
+        self.save()
 
 
 class Review(models.Model):

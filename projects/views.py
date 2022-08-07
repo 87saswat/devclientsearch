@@ -29,7 +29,13 @@ def project(request, pk):
             # CONNECT THE REVIEW OWNER WITH THE PROFILE PAGE
             review.owner = request.user.profile
             review.save()
+
+            # GETTING VOTE COUNT TOTAL AND RATIO FROM THE MODEL METHOD getVotecount()
+            # dont need to run it as a method () because of @property deorator
+            projectObj.getVotecount
+
             messages.success(request, "Review submitted successfully")
+            return redirect('project', pk=projectObj.id)
 
             # UPDATE PRJECT VOTE COUNT
 

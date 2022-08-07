@@ -37,7 +37,17 @@
                         <h5 class="project--rating">
                             {{project.vote_ratio}}% Postitive Feedback ({{project.vote_total}} Vote{{project.vote_total|pluralize:"s"}})
                         </h5>
-    
+                        
+                        <!-- If the user is already voted , he can't vote. we get project.reviewers from our model method -->
+                        {% if request.user.profile.id in projects.reviewers %}
+                        <p>You have already submited your Review/Vote for this project </p>
+
+                            <!-- If the user himself is the owner of the project ? he can't vote -->
+                            {% elif request.user.profile == project.owner %}
+                            <p> You cannot submit Review/Vote for your own project</p>
+
+                            <!-- If the user has not voted or not te owner and is logged in.. output the form -->
+                            {% elif request.user.is_authenticated %}
                         <form class="form" action="{% url 'project' project.id %}" method="POST">
                             {% csrf_token %}
                             <!-- Textarea -->
@@ -51,6 +61,11 @@
                             {% endfor %}
                             <input class="btn btn--sub btn--lg" type="submit" value="Comments" />
                         </form>
+                        {% else %}
+                        <!-- ASK TE USER TO LOGIN TO SUBMIT A VOTE OR REVIEW -->
+                        <a href="{% url 'login' %}?next={{request.path}}">Plaese Signin to submit your vote and review</a>
+
+                        {% endif %}
 
 
                         <!-- COMMENTS FUNCTIONALITY START -->
