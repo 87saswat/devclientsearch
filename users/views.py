@@ -1,7 +1,7 @@
 
 
 from django.shortcuts import render, redirect
-from .models import Profile
+from .models import Profile, Message
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -157,3 +157,12 @@ def deleteSkill(request, pk):
 
     context = {'object': skill}
     return render(request, 'delete-objects.html', context)
+
+
+@login_required(login_url='login')
+def inbox(request):
+    profile = request.user.profile
+    messageRequests = profile.messages.all()
+    unreadCount = messageRequests.filter(is_read=False).count()
+    context = {'messageRequests': messageRequests, 'unreadCount': unreadCount}
+    return render(request, 'users/inbox.html', context)
