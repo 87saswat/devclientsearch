@@ -166,3 +166,8 @@ def inbox(request):
     unreadCount = messageRequests.filter(is_read=False).count()
     context = {'messageRequests': messageRequests, 'unreadCount': unreadCount}
     return render(request, 'users/inbox.html', context)
+
+
+def viewMessage(request):
+    context = {}
+    return render(request, 'users/message.html', context)
