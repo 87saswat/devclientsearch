@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 
 
 from django.contrib.auth import login, authenticate, logout
-from .forms import CustomUserCreationForm, ProfileForm, SkillForm
+from .forms import CustomUserCreationForm, ProfileForm, SkillForm, MessageForm
 
 from .utils import searchProfiles, paginateProfiles
 
@@ -168,6 +168,7 @@ def inbox(request):
     return render(request, 'users/inbox.html', context)
 
 
+@login_required(login_url='login')
 def viewMessage(request, pk):
     profile = request.user.profile
     message = profile.messages.get(id=pk)
@@ -176,3 +177,29 @@ def viewMessage(request, pk):
         message.save()
     context = {'message': message}
     return render(request, 'users/message.html', context)
+
+
+def createMessage(request, pk):
+    recepient = Profile.objects.get(id=pk)
+    form = MessageForm()
+    try:
+        sender = request.user.profile
+    except:
+        sender = None
+
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = sender
+            message.recepient = recepient
+
+            if sender:
+                message.name = sender.name
+                message.email = sender.email
+            message.save()
+            messages.success(request, 'Message sent successfully')
+            return redirect('user-profile', pk=recepient.id)
+
+    context = {'recepient': recepient, 'form': form}
+    return render(request, 'users/message_form.html', context)
